@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      background: #fff;
+      margin: 2rem;
+    }
+
+    #video-compare-container {
+      display: inline-block;
+      line-height: 0;
+      position: relative;
+      width: 100%;
+      padding-top: 42.3%;
+    }
+
+    #video-compare-container > video {
+      width: 100%;
+      position: absolute;
+      top: 0;
+      height: 100%;
+    }
+
+    #video-clipper {
+      width: 50%;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      overflow: hidden;
+    }
+
+    #video-clipper video {
+      width: 200%;
+      position: absolute;
+      height: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <center>
+    <h1> <b>A</b> VS  <b>B</b> </h1>
+    <h3>Click on video to play or pause. Move mouse to change the hover.</h3>
+  </center>
+
+  <div id="video-compare-container">
+    <video id='src' loop autoplay onclick="video_click()">
+      <source src="Fossil Watches.  Effortless style, every second. Wear Fossil.  Mens Watch  Now available in stock. Thibirigasyaya,Colombo 05 - pita kotte - Kandy - Wattala. Call 📞 0771412652 Order online at - www.wimsons.com Islandwide.mp4">
+      <!-- <source src=/loca/path/to/your/mp4> -->
+    </video>
+    <div id="video-clipper">
+      <video id='tgt' loop autoplay onclick="video_click()">
+        <source src="Apartment for Sale in Colombo 05 🌆  Located in Dabare Mawatta, This apartment for sale in Lumiere Residencies comes unfurnished with 2,663 Sq.ft  ✨ Highlights- 🛌 04 Bedrooms - Unfurnished 🏙 Lower Floor with City View .mp4">
+        <!-- <source src=/home/yun/out2.mp4> -->
+      </video>
+    </div>
+  </div>
+
+  <script>
+    var v = document.getElementById("src");
+    var v2 = document.getElementById("tgt");
+
+    function video_click() {
+      if (v.paused){
+       v.play();
+       v2.play(); 
+      }
+      else{
+        v.pause();
+        v2.pause();
+      }
+      v.currentTime=v2.currentTime;
+      v2.currentTime=v.currentTime;
+    }
+
+    var videoContainer = document.getElementById("video-compare-container"),
+    videoClipper = document.getElementById("video-clipper"),
+    clippedVideo = videoClipper.getElementsByTagName("video")[0];
+
+    function trackLocation(e) {
+      var rect = videoContainer.getBoundingClientRect(),
+        position = ((e.pageX - rect.left) / videoContainer.offsetWidth) * 100;
+      if (position <= 100) {
+        videoClipper.style.width = position + "%";
+        clippedVideo.style.width = ((100 / position) * 100) + "%";
+        clippedVideo.style.zIndex = 3;
+        
+        // Control audio based on which video is more visible
+        if (position > 50) {
+          // Video B (tgt) takes more space - play its audio
+          v.muted = true;
+          v2.muted = false;
+        } else if (position < 50) {
+          // Video A (src) takes more space - play its audio
+          v.muted = false;
+          v2.muted = true;
+        } else {
+          // Exactly 50/50 - play both audios
+          v.muted = false;
+          v2.muted = false;
+        }
+      }
+    }
+    
+    videoContainer.addEventListener("mousemove", trackLocation, false);
+    videoContainer.addEventListener("touchstart", trackLocation, false);
+    videoContainer.addEventListener("touchmove", trackLocation, false);
+  </script>
+</body>
+</html>
